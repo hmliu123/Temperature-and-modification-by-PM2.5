@@ -16,7 +16,7 @@ library(mgcv)
 
 ###############STEP 1#########################
 #IMPORT DATA
-data_use <- read.csv("E:/OneDrive/11_Doctor research/17.PM2.5组分健康效应/住院/温度code/Github code1126/test_data_fin.csv") %>% 
+data_use <- read.csv("test_data_fin.csv") %>% 
   mutate(date = as.Date(date))
 regions <- unique(data_use$district)
 
@@ -155,7 +155,7 @@ for(i in regions) {
   cpcold.total <- crosspred(blag,coef=coef(mvcold),vcov=vcov(mvcold),
                             model.link="log",at=0:lag)
   
- ##############STEP #EEEEEEEEEE
+ ##############STEP 3##########
 #PLOT OVERALL EXPOSURE-RESPONSE CURVES
 xlab <- paste("Daily Mean Temperature")
 plot(cpall.total,type="n",ylab="Relative Risk",
