@@ -12,7 +12,7 @@ library(tidyverse);library(dlnm);library(splines);
 library(mgcv);library(mixmeta);
 ###############STEP 1#########################
 #IMPORT DATA
-data_use <- read.csv("E:/OneDrive/11_Doctor research/17.PM2.5组分健康效应/住院/温度code/Github code1126/test_data_fin.csv") %>% 
+data_use <- read.csv("test_data_fin.csv") %>% 
   mutate(date = as.Date(date))
 regions <- unique(data_use$district)
 
