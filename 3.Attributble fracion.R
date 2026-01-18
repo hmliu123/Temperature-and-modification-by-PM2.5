@@ -16,7 +16,7 @@ library(survival)
 library(mgcv)
 ########mgcv###############STEP 1#########################
 #IMPORT DATA
-data_use <- read.csv("E:/OneDrive/11_Doctor research/17.PM2.5组分健康效应/住院/温度code/Github code1126/Temperature-and-modification-by-PM2.5/test_data_fin.csv") %>% 
+data_use <- read.csv("E:/OneDrive/11_Doctor research/17.PM2.5缁勫垎鍋ュ悍鏁堝簲/浣忛櫌/娓╁害code/Github code1126/Temperature-and-modification-by-PM2.5/test_data_fin.csv") %>% 
   mutate(date = as.Date(date))
 regions <- unique(data_use$district)
 
@@ -83,7 +83,10 @@ blup <- blup(mvall,vcov=T)
 # GENERATE THE MATRIX FOR STORING THE RESULTS
 mintempcity <- rep(NA,length(regions))
 names(mintempcity) <- regions
-
+q25city <- rep(NA,length(city_in))
+  names(q25city) <- city_in
+ q975city <- rep(NA,length(city_in))
+names(q75city) <- city_in
 for (i in regions) {
   sub <- data[[i]]
   tperc <- quantile(sub$l0avg_temp,0.5:0.995/100,na.rm=T)
@@ -93,12 +96,14 @@ for (i in regions) {
   
   bvar <- do.call(onebasis,argvar)
   mintempcity[i] <-tperc[which.min((bvar%*%blup[[i]]$blup))]
+  q25city[i] <- quantile(sub$l0avg_temp,0.025,na.rm = T)
+  q975city[i] <- quantile(sub$l0avg_temp,0.975,na.rm = T)
 }
 
 ##########STEP 3###############################################
 #COMPUTE THE AN IN EACH CITY WITH EMPIRICAL CI
 ##############################################################
-source("E:\\OneDrive\\11_Doctor research\\17.PM2.5组分健康效应\\住院\\温度code\\attrdl.R")
+source("E:\\OneDrive\\11_Doctor research\\17.PM2.5缁勫垎鍋ュ悍鏁堝簲\\浣忛櫌\\娓╁害code\\attrdl.R")
 # CREATE THE MATRIX TO STORE THE ATTRIBUTABLE DEATHS
 totan <- rep(NA,length(regions))
 names(totan) <- regions
@@ -129,7 +134,7 @@ for(i in regions){
   argvar <- list(fun="ns",df=3) 
   # DERIVE THE CROSS-BASIS
   cb <- crossbasis(sub$l0avg_temp, lag = lag, argvar=argvar, arglag=arglag)
-  
+   cen <- mintempcity[i]
   #DEFINE CENTERING VALUE
   cen = mintempcity[i]
   matsim[i,"nationwide",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
@@ -144,11 +149,11 @@ for(i in regions){
   
   matsim[i,"excold",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
                                 vcov=blup[[i]]$vcov,type="an",dir="forw",cen=cen,
-                                range=c(-100,-3.1))
+                                range=c(-100,q25city[i]))
   
   matsim[i,"exheat",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
                                 vcov=blup[[i]]$vcov,type="an",dir="forw",cen= mintempcity[i],
-                                range=c(27.9,100))
+                                range=c(q975city[i],100))
   
   #DERIVE CONFIDENCE INTERVALS
   an.arraysim[i,"nationwide",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
@@ -164,12 +169,12 @@ for(i in regions){
   
   an.arraysim[i,"excold",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
                                      vcov=blup[[i]]$vcov,type="an",dir="forw",cen=cen,
-                                     range=c(-100,-3.1),sim=T,nsim=nsim)
+                                     range=c(-100,q25city[i]),sim=T,nsim=nsim)
   
   
   an.arraysim[i,"exheat",] <- attrdl(sub$l0avg_temp,cb,sub$PSN_NO,coef=blup[[i]]$blup,
                                      vcov=blup[[i]]$vcov,type="an",dir="forw",cen=mintempcity[i],
-                                     range=c(27.9,100),sim=T,nsim=nsim)
+                                     range=c(q975city[i],100),sim=T,nsim=nsim)
   
   # STORE THE DENOMINATOR OF ATTRIBUTABLE DEATHS, I.E. TOTAL OBSERVED MORTALITY
   # CORRECT DENOMINATOR TO COMPUTE THE ATTRIBUTABLE FRACTION LATER, AS IN attrdl
