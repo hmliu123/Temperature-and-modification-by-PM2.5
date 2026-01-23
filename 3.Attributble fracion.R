@@ -83,10 +83,10 @@ blup <- blup(mvall,vcov=T)
 # GENERATE THE MATRIX FOR STORING THE RESULTS
 mintempcity <- rep(NA,length(regions))
 names(mintempcity) <- regions
-q25city <- rep(NA,length(city_in))
-  names(q25city) <- city_in
- q975city <- rep(NA,length(city_in))
-names(q75city) <- city_in
+q25city <- rep(NA,length(regions))
+  names(q25city) <- regions
+ q975city <- rep(NA,length(regions))
+names(q75city) <- regions
 for (i in regions) {
   sub <- data[[i]]
   tperc <- quantile(sub$l0avg_temp,0.5:0.995/100,na.rm=T)
