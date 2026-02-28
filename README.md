@@ -11,5 +11,5 @@ R Software, version 4.3.0
 
 ## Instructions to use code
 1. Necessary packages are provided in the codes, please first install the packages.
-2. The shared codes are used to generate the main analysis of the paperm, including the associations between non-optimum temperatures and hospital admissions as well as the effect modification by ambient air pollution.
+2. The shared codes are used to generate the main analysis of the paper, including the associations between non-optimum temperatures and hospital admissions as well as the effect modification by ambient air pollution.
 3. The codes are generated to estimate the hosptial admission risks for total major cardiovascular events associated with short-term exposure to non-optimum temperatures. The same code can be used (by changing the dataset of other cause-specific hospital admissions) to develop the results for other subtypes.
