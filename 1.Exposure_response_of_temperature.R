@@ -127,18 +127,6 @@ for(i in regions) {
   xlag <- 0:lag
   blag <- do.call("onebasis",c(list(x=xlag),attr(cb.tm1,"arglag")))
   
-  #PREDICT THE CITY-SPECIFIC CUMULATIVE ASSOCIATIONS
-  regall <- lapply(seq(nrow(yall)),function(i) 
-    crosspred(bvar,coef=yall[i,],
-              vcov=Sall[[i]],model.link="log",cen=23))
-  reghot <- lapply(seq(nrow(yhot)),function(i) 
-    crosspred(blag,coef=yhot[i,],
-              vcov=Shot[[i]],model.link="log",cen=23))
-  regcold <- lapply(seq(nrow(ycold)),function(i) 
-    crosspred(blag,coef=ycold[i,],
-              vcov=Scold[[i]],model.link="log",cen=23))
-  
-  
   #PREDICT THE OVERALL CUMULATIVE ASSOCIATIONS
   cpall.total <- crosspred(bvar,coef=coef(mvall),vcov=vcov(mvall),
                            model.link="log",by=0.1,from=bound[1],to=bound[2],cen=mmt)
