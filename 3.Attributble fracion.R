@@ -89,7 +89,7 @@ q25city <- rep(NA,length(regions))
 names(q75city) <- regions
 for (i in regions) {
   sub <- data[[i]]
-  tperc <- quantile(sub$l0avg_temp,0.5:0.995/100,na.rm=T)
+  tperc <- quantile(sub$l0avg_temp,5:95/100,na.rm=T)
   
   
   argvar <- list(x = tperc,fun="ns",df=3) 
