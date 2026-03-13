@@ -42,7 +42,7 @@ names(Sall) <- regions
 
 Shot <- c()
 Scold <- c()
-
+MMT <- vector()
 
   
 #LOOP FOR CITIES
@@ -78,7 +78,7 @@ for(i in regions) {
       # PREDICTION AND REDUCTION TO OVERALL CUMULATIVE EXPOSURE-RESPONSE
       pred <- crosspred(cb, mfirst,by = 0.1,cumul = TRUE);
     
-      
+      mmt <- pred$predvar[which.min(pred$allRRfit)];
       crall <- crossreduce(cb,mfirst,cen=20,by = 0.1) #
       crhot <- crossreduce(cb,mfirst,type="var",value=value_hot,cen=20)
       crcold <- crossreduce(cb,mfirst,type="var",value=value_cold,cen=20)
@@ -91,12 +91,12 @@ for(i in regions) {
       ycold[i,] <- coef(crcold)
       Scold[[i]] <- vcov(crcold)
       
-    
+      MMT[i] <- mmt
       
       
     }, error=function(e){cat("Error",conditionMessage(e), "\n")})    
   }
-  
+  mmt <- round(median(MMT),1)
  ###########STEP 2#############
   
   #META
