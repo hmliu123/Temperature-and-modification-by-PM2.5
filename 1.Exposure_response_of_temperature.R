@@ -5,7 +5,7 @@
 ##########################################################################################################################################################
 
 ######################################################################################################################################
-#Overall exposure-response relationships between non-optimum temperature and hospital admissions (HAs) for major CVDs
+#Overall exposure-response relationships between non-optimum temperature and hospital admissions (HAs) for major cardiovascular events
 ##########################################################################################################################################
 library(tidyverse)
 library(lubridate)
@@ -172,7 +172,6 @@ plot(cphot.total,type="n",ylab="Relative Risk",cex.axis = 1.3, cex.lab = 1.5,
 lines(cphot.total,col=1,lwd=1)
 mtext("Lag pattern for hot",cex=1,line = 0)
 #PLOT LAG PATTERN FOR EXTREME HOT TEMPERATURE
-
 plot(cpcold.total,type="n",ylab="Relative Risk",cex.axis = 1.3, cex.lab = 1.5,
      ci.arg = list(col = c("#D0E7Ed")),ylim = c(0.85,1.10))
 lines(cpcold.total,col=1,lwd=1)
